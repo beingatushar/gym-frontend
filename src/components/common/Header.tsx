@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { FaBars, FaShoppingBag, FaTimes } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
-import { FaBars, FaTimes, FaShoppingBag } from 'react-icons/fa';
 import ThemeToggle from './ThemeToggle';
 
 const Header: React.FC = () => {
@@ -24,7 +24,7 @@ const Header: React.FC = () => {
     <header className="bg-white/90 dark:bg-brand-dark/90 backdrop-blur-md fixed w-full z-50 shadow-sm text-gray-800 dark:text-gray-200">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold text-theme-primary">
-          Charming Moments
+          Shelly Nutrition
         </Link>
         <nav className="hidden md:flex space-x-8 items-center">
           {navLinks.map(({ to, label }) => (

@@ -1,14 +1,17 @@
 import React from 'react';
+import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { FaInstagram, FaFacebook, FaTwitter } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
   const socialLinks = [
     {
-      href: 'https://instagram.com/charmimg_moments',
+      href: 'https://www.instagram.com/shelly_nutrition',
       icon: <FaInstagram size={24} />,
     },
-    { href: 'https://facebook.com', icon: <FaFacebook size={24} /> },
+    {
+      href: 'https://www.facebook.com/sonu.goyal.75470',
+      icon: <FaFacebook size={24} />,
+    },
     { href: 'https://twitter.com', icon: <FaTwitter size={24} /> },
   ];
 
@@ -32,11 +35,10 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-2xl font-bold text-theme-primary mb-4">
-              Charming Moments
+              Shelly Nutrition
             </h3>
             <p className="max-w-md">
-              Handcrafted Elegance & Sweet Delights. Discover our unique
-              collection of handmade products.
+              Collection of best suplements and nutritional products
             </p>
             <div className="flex space-x-4 mt-6">
               {socialLinks.map((link, index) => (
@@ -69,14 +71,14 @@ const Footer: React.FC = () => {
               Contact Us
             </h3>
             <ul className="space-y-2">
-              <li>charmingmomentsbypooja310777@gmail.com</li>
-              <li>+91 8368580432</li>
+              <li>shellynutrition@gmail.com</li>
+              <li>+91 9313303030</li>
             </ul>
           </div>
         </div>
         <div className="border-t border-gray-300 dark:border-gray-700 mt-8 pt-6 text-center text-sm">
           <p>
-            &copy; {new Date().getFullYear()} Charming Moments. All rights
+            &copy; {new Date().getFullYear()} Shelly Nutrition. All rights
             reserved.
           </p>
         </div>
