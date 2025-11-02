@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folder Comparison Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.5rem 1rem;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Folder Comparison Tool</h1>
+            <p class="text-gray-600 mt-2">Visually compare the contents of two folders to see the differences.</p>
+        </header>
+
+        <main>
+            <!-- Folder Selection Simulation -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="font-semibold text-lg mb-2">Folder A (Original)</h3>
+                    <div class="bg-gray-100 p-3 rounded-md text-gray-700 break-words">/Users/project/version-1.0</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="font-semibold text-lg mb-2">Folder B (Modified)</h3>
+                    <div class="bg-gray-100 p-3 rounded-md text-gray-700 break-words">/Users/project/version-1.1</div>
+                </div>
+            </div>
+
+            <div class="text-center mb-8">
+                <button id="compareBtn" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    Compare Folders
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results" class="hidden">
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h2 class="text-2xl font-bold mb-2">Comparison Report</h2>
+                    <p id="summary" class="text-gray-600 mb-4"></p>
+                    
+                    <!-- Legend -->
+                    <div class="flex flex-wrap gap-4 mb-6 text-sm">
+                        <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-green-200 mr-2 border border-green-300"></span>Added</div>
+                        <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-red-200 mr-2 border border-red-300"></span>Deleted</div>
+                        <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-yellow-200 mr-2 border border-yellow-300"></span>Modified</div>
+                        <div class="flex items-center"><span class="w-4 h-4 rounded-full bg-gray-200 mr-2 border border-gray-300"></span>Identical</div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 pt-4">
+                        <div class="grid grid-cols-[auto,1fr,auto] md:grid-cols-[auto,1fr,100px,120px] gap-x-4 font-semibold text-gray-600 text-sm px-4 py-2">
+                            <span></span> <!-- Icon -->
+                            <span>Path</span>
+                            <span class="hidden md:block">Size</span>
+                            <span class="text-right">Status</span>
+                        </div>
+                        <div id="report-container" class="space-y-1">
+                            <!-- Comparison results will be injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- MOCK DATA ---
+        // In a real application, this data would come from scanning the file system.
+        const folderA = {
+            name: '/',
+            type: 'folder',
+            children: [
+                { name: 'index.html', type: 'file', size: 1530, modified: '2023-10-26T10:00:00Z' },
+                { name: 'README.md', type: 'file', size: 550, modified: '2023-10-20T14:00:00Z' },
+                {
+                    name: 'src',
+                    type: 'folder',
+                    children: [
+                        { name: 'app.js', type: 'file', size: 8760, modified: '2023-10-26T11:00:00Z' },
+                        { name: 'styles.css', type: 'file', size: 2340, modified: '2023-10-25T09:30:00Z' },
+                        { name: 'utils.js', type: 'file', size: 1200, modified: '2023-10-22T18:00:00Z' }, // This file will be deleted
+                    ]
+                },
+                {
+                    name: 'assets',
+                    type: 'folder',
+                    children: [
+                        { name: 'logo.svg', type: 'file', size: 3010, modified: '2023-10-20T15:00:00Z' },
+                    ]
+                }
+            ]
+        };
+
+        const folderB = {
+            name: '/',
+            type: 'folder',
+            children: [
+                { name: 'index.html', type: 'file', size: 1530, modified: '2023-10-26T10:00:00Z' }, // Identical
+                { name: 'README.md', type: 'file', size: 620, modified: '2023-10-27T09:00:00Z' }, // Modified
+                {
+                    name: 'src',
+                    type: 'folder',
+                    children: [
+                        { name: 'app.js', type: 'file', size: 9100, modified: '2023-10-27T09:15:00Z' }, // Modified
+                        { name: 'styles.css', type: 'file', size: 2340, modified: '2023-10-25T09:30:00Z' }, // Identical
+                        { name: 'api.js', type: 'file', size: 4500, modified: '2023-10-27T10:00:00Z' }, // Added
+                    ]
+                },
+                {
+                    name: 'assets',
+                    type: 'folder',
+                    children: [
+                        { name: 'logo.svg', type: 'file', size: 3010, modified: '2023-10-20T15:00:00Z' }, // Identical
+                        { name: 'icon.png', type: 'file', size: 12400, modified: '2023-10-27T11:00:00Z' }, // Added
+                    ]
+                },
+                 { name: 'LICENSE', type: 'file', size: 1080, modified: '2023-10-27T12:00:00Z' }, // Added
+            ]
+        };
+
+        // --- ICONS ---
+        const icons = {
+            file: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>`,
+            folder: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`,
+        };
+        
+        // --- CORE LOGIC ---
+        function compareDirectories(dirA, dirB, path = '') {
+            const results = [];
+            const itemsA = new Map(dirA.children.map(item => [item.name, item]));
+            const itemsB = new Map(dirB.children.map(item => [item.name, item]));
+
+            // Check items in A against B
+            for (const [name, itemA] of itemsA) {
+                const currentPath = `${path}/${name}`;
+                if (!itemsB.has(name)) {
+                    results.push({ path: currentPath, status: 'Deleted', type: itemA.type, size: itemA.size });
+                    if (itemA.type === 'folder') {
+                        results.push(...flatten(itemA, currentPath, 'Deleted'));
+                    }
+                } else {
+                    const itemB = itemsB.get(name);
+                    if (itemA.type !== itemB.type) {
+                        results.push({ path: currentPath, status: 'Modified', type: 'mixed', size: itemB.size, details: 'Type changed' });
+                    } else if (itemA.type === 'file') {
+                        if (itemA.size !== itemB.size || itemA.modified !== itemB.modified) {
+                            results.push({ path: currentPath, status: 'Modified', type: 'file', size: itemB.size, details: `Size: ${formatBytes(itemA.size)} -> ${formatBytes(itemB.size)}` });
+                        } else {
+                            results.push({ path: currentPath, status: 'Identical', type: 'file', size: itemB.size });
+                        }
+                    } else if (itemA.type === 'folder') {
+                        results.push(...compareDirectories(itemA, itemB, currentPath));
+                    }
+                }
+            }
+
+            // Check for items in B not in A
+            for (const [name, itemB] of itemsB) {
+                const currentPath = `${path}/${name}`;
+                if (!itemsA.has(name)) {
+                    results.push({ path: currentPath, status: 'Added', type: itemB.type, size: itemB.size });
+                     if (itemB.type === 'folder') {
+                        results.push(...flatten(itemB, currentPath, 'Added'));
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        function flatten(dir, path, status) {
+            let results = [];
+            for (const item of dir.children) {
+                const currentPath = `${path}/${item.name}`;
+                results.push({ path: currentPath, status, type: item.type, size: item.size });
+                if (item.type === 'folder') {
+                    results.push(...flatten(item, currentPath, status));
+                }
+            }
+            return results;
+        }
+
+
+        // --- UI RENDERING ---
+        function renderReport(results) {
+            const container = document.getElementById('report-container');
+            const summaryEl = document.getElementById('summary');
+            container.innerHTML = '';
+            
+            results.sort((a, b) => a.path.localeCompare(b.path));
+
+            const stats = { Added: 0, Deleted: 0, Modified: 0 };
+
+            results.forEach(item => {
+                if (stats[item.status] !== undefined) {
+                    stats[item.status]++;
+                }
+
+                const statusClasses = {
+                    'Added': 'bg-green-100 text-green-800 border-green-200',
+                    'Deleted': 'bg-red-100 text-red-800 border-red-200',
+                    'Modified': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                    'Identical': 'bg-gray-100 text-gray-700 border-gray-200'
+                };
+
+                const statusBadgeClasses = {
+                    'Added': 'bg-green-200 text-green-900',
+                    'Deleted': 'bg-red-200 text-red-900',
+                    'Modified': 'bg-yellow-200 text-yellow-900',
+                    'Identical': 'bg-gray-200 text-gray-800'
+                };
+                
+                const depth = (item.path.match(/\//g) || []).length - 1;
+
+                const row = document.createElement('div');
+                row.className = `grid grid-cols-[auto,1fr,auto] md:grid-cols-[auto,1fr,100px,120px] gap-x-4 items-center p-2 px-4 rounded-md border ${statusClasses[item.status] || 'bg-gray-50'}`;
+                
+                row.innerHTML = `
+                    <div style="padding-left: ${depth * 20}px;" class="flex items-center">
+                        ${icons[item.type] || icons['file']}
+                    </div>
+                    <span class="truncate" title="${item.path}">${item.path.substring(item.path.lastIndexOf('/') + 1)}</span>
+                    <span class="hidden md:block text-sm text-gray-600">${item.type === 'file' ? formatBytes(item.size) : '—'}</span>
+                    <div class="text-right">
+                        <span class="text-xs font-semibold px-2 py-1 rounded-full ${statusBadgeClasses[item.status] || ''}">${item.status}</span>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+            
+            summaryEl.textContent = `Comparison found ${stats.Added} file(s) added, ${stats.Deleted} deleted, and ${stats.Modified} modified.`;
+        }
+
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        document.getElementById('compareBtn').addEventListener('click', () => {
+            document.getElementById('results').classList.remove('hidden');
+            const comparisonResults = compareDirectories(folderA, folderB);
+            renderReport(comparisonResults);
+        });
+        
+    </script>
+</body>
+</html>

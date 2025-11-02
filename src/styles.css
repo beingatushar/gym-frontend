@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-brand-light dark:bg-brand-dark text-gray-700 dark:text-gray-300 transition-colors duration-300;
+}
+
+/* Define variables for all themes, including light and dark */
+body.theme-light,
+body.theme-dark {
+  --theme-primary: #ec4899;
+  --theme-secondary: #fce7f3;
+}
+
+.theme-rose {
+  --theme-primary: #f43f5e;
+  --theme-secondary: #ffe4e6;
+}
+
+.theme-sky {
+  --theme-primary: #0ea5e9;
+  --theme-secondary: #e0f2fe;
+  --theme-secondary: #f0f9ff;
+  --theme-text-on-primary: #ffffff;
+}
+
+.theme-amber {
+  --theme-primary: #f59e0b; /* Amber 500 */
+  --theme-primary-hover: #d97706; /* Amber 600 */
+  --theme-secondary: #fffbeb; /* Amber 50 */
+  --theme-text-on-primary: #ffffff; /* White */
+}
+
+/* New Vibrant Theme! */
+.theme-emerald {
+  --theme-primary: #10b981; /* Emerald 500 */
+  --theme-primary-hover: #059669; /* Emerald 600 */
+  --theme-secondary: #ecfdf5; /* Emerald 50 */
+  --theme-text-on-primary: #ffffff; /* White */
+}
+
+button {
+  cursor: pointer;
+}
