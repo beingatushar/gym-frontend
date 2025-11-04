@@ -1,6 +1,8 @@
 import React from 'react';
-import HeroSection from '../components/common/HeroSection';
 import aboutImage from '../assets/about_us.jpg';
+import bhavishya_image from '../assets/bhavishya3.png';
+import sonu_image from '../assets/sonu3.jpg';
+import HeroSection from '../components/common/HeroSection';
 
 const TeamMember: React.FC<{ member: TeamMemberProps }> = ({ member }) => (
   <div className="bg-white dark:bg-brand-dark-secondary rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
@@ -8,7 +10,7 @@ const TeamMember: React.FC<{ member: TeamMemberProps }> = ({ member }) => (
       loading="lazy"
       src={member.image}
       alt={member.name}
-      className="w-full h-56 object-cover"
+      className="h-56 w-56 object-cover text-center mx-auto"
     />
     <div className="p-6 text-center">
       <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
@@ -26,27 +28,35 @@ const AboutPage: React.FC = () => {
   const teamMembers: TeamMemberProps[] = [
     {
       id: 1,
-      name: 'Pooja Arora',
+      name: 'Sonu Goyal',
       role: 'Founder & CEO',
-      image: 'https://i.pravatar.cc/300?u=pooja',
+      image: sonu_image,
       description:
-        'The visionary leader with a passion for creating unique resin crafts and sweet delights.',
+        'Fitness enthusiast and visionary leader with over 10 years of experience in the fitness industry, dedicated to providing quality gym equipment.',
     },
     {
       id: 2,
-      name: 'Vanshita Arora',
+      name: 'Bhavishya Goyal',
       role: 'Operations Lead',
-      image: 'https://i.pravatar.cc/300?u=vanshita',
+      image: bhavishya_image,
       description:
-        'Vanshita ensures smooth production and delivery, maintaining our high-quality standards.',
+        'Ensures seamless operations and customer satisfaction while maintaining our high standards for quality fitness products and services.',
     },
     {
       id: 3,
+      name: 'Harshit Goyal',
+      role: 'Web Developer',
+      image: 'https://i.pravatar.cc/300?u=harshit',
+      description:
+        'Creates and maintains our digital platform, delivering an exceptional online shopping experience for fitness enthusiasts worldwide.',
+    },
+    {
+      id: 4,
       name: 'Tushar Aggarwal',
       role: 'Web Developer',
-      image: 'https://i.pravatar.cc/300?u=tushar',
+      image: 'https://i.pravatar.cc/300?u=harshit',
       description:
-        'Tushar crafts our seamless online experience, bringing our creations to the digital world.',
+        'Creates and maintains our digital platform, delivering an exceptional online shopping experience for fitness enthusiasts worldwide.',
     },
   ];
 
@@ -55,19 +65,32 @@ const AboutPage: React.FC = () => {
       <HeroSection
         title="Our Story"
         backgroundImage={aboutImage}
-        subtitle="Crafting moments of charm and delight since 2023."
+        subtitle="Crafting moments of charm and delight since 2010."
       />
 
       <section className="py-16 bg-white dark:bg-brand-dark">
         <div className="container mx-auto px-6 text-center max-w-3xl">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-            Welcome to Charming Moments
+            Welcome to Shelly Nutrition
           </h2>
+          <div className="mb-6">
+            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+              Best Supplement Store in Faridabad with a 4.9/5 Google Rating
+            </p>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <span className="text-yellow-500">★★★★★</span>
+              <span className="text-gray-600 dark:text-gray-400">
+                (4.960 Google reviews)
+              </span>
+            </div>
+          </div>
           <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            Founded by Pooja Arora, Charming Moments believes in recollecting
-            and brightening every moment. We specialize in a variety of handmade
-            products, including homemade chocolates, candles, resin art, and
-            purses, all crafted with love and meticulous attention to detail.
+            Founded by Sonu Goyal, Shelly Nutrition is your trusted partner in
+            fitness and wellness. Located in Sector 51, Faridabad, we specialize
+            in premium quality supplements and nutritional products designed to
+            support your fitness journey. With over a decade of experience in
+            the industry, we provide carefully selected supplements, expert
+            guidance, and personalized nutrition solutions.
           </p>
         </div>
       </section>
@@ -77,7 +100,7 @@ const AboutPage: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">
             Meet Our Team
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member) => (
               <TeamMember key={member.id} member={member} />
             ))}
