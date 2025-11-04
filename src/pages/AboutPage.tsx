@@ -73,11 +73,24 @@ const AboutPage: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">
             Welcome to Shelly Nutrition
           </h2>
+          <div className="mb-6">
+            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+              Best Supplement Store in Faridabad with a 4.9/5 Google Rating
+            </p>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <span className="text-yellow-500">★★★★★</span>
+              <span className="text-gray-600 dark:text-gray-400">
+                (4.960 Google reviews)
+              </span>
+            </div>
+          </div>
           <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            Founded by Sonu Goyal, Shelly Nutrition believes in recollecting and
-            brightening every moment. We specialize in a variety of handmade
-            products, including homemade chocolates, candles, resin art, and
-            purses, all crafted with love and meticulous attention to detail.
+            Founded by Sonu Goyal, Shelly Nutrition is your trusted partner in
+            fitness and wellness. Located in Sector 51, Faridabad, we specialize
+            in premium quality supplements and nutritional products designed to
+            support your fitness journey. With over a decade of experience in
+            the industry, we provide carefully selected supplements, expert
+            guidance, and personalized nutrition solutions.
           </p>
         </div>
       </section>
