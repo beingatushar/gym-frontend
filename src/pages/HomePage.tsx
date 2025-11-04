@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { FaGift, FaStar, FaShippingFast } from 'react-icons/fa';
+import { FaGift, FaShippingFast, FaStar } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
-import HeroSection from '../components/common/HeroSection';
 import CategorySlider from '../components/CategorySlider';
+import HeroSection from '../components/common/HeroSection';
 import Spinner from '../components/common/Spinner';
 import { ProductCard } from '../components/ProductCard';
 import { useProductStore } from '../stores/useProductStore';
@@ -59,21 +59,21 @@ const OurPromise: React.FC = () => {
   const promises = [
     {
       icon: <FaGift size={32} className="text-theme-primary" />,
-      title: 'Uniquely Handcrafted',
+      title: 'Quality Assured',
       description:
-        'Every item is crafted with love, ensuring no two pieces are exactly alike.',
+        'All our supplements are sourced from certified manufacturers and thoroughly tested for quality.',
     },
     {
       icon: <FaStar size={32} className="text-theme-primary" />,
-      title: 'Premium Quality',
+      title: 'Expert Guidance',
       description:
-        'We use only the finest materials to create products that last.',
+        'Get professional advice from our certified nutritionists for your fitness journey.',
     },
     {
       icon: <FaShippingFast size={32} className="text-theme-primary" />,
       title: 'Fast & Reliable Shipping',
       description:
-        'Your treasures are packed with care and shipped to you promptly.',
+        'Quick delivery across India with proper storage conditions maintained.',
     },
   ];
 
@@ -125,8 +125,8 @@ const HomePage: React.FC = () => {
   return (
     <div className="animate-fade-in">
       <HeroSection
-        title="Handmade with Heart"
-        subtitle="Discover unique gifts and sweet indulgences crafted with love."
+        title="Your Fitness Journey Starts Here"
+        subtitle="Premium supplements and nutrition products for your health and wellness goals."
         backgroundImage={homepageImage}
       >
         <Link

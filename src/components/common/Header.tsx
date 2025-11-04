@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { FaBars, FaShoppingBag, FaTimes } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
-import { FaBars, FaTimes, FaShoppingBag } from 'react-icons/fa';
 import ThemeToggle from './ThemeToggle';
 
 const Header: React.FC = () => {
