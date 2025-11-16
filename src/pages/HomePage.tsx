@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { FaGift, FaShippingFast, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import Testimonials from '../components/common/Testimonials';
 
 import CategorySlider from '../components/CategorySlider';
 import HeroSection from '../components/common/HeroSection';
@@ -59,21 +60,21 @@ const OurPromise: React.FC = () => {
   const promises = [
     {
       icon: <FaGift size={32} className="text-theme-primary" />,
-      title: 'Quality Assured',
+      title: '100% Genuine Products',
       description:
-        'All our supplements are sourced from certified manufacturers and thoroughly tested for quality.',
+        '15 years of trusted experience in providing authentic supplements at the lowest rates in India.',
     },
     {
       icon: <FaStar size={32} className="text-theme-primary" />,
-      title: 'Expert Guidance',
+      title: 'Highly Rated Service',
       description:
-        'Get professional advice from our certified nutritionists for your fitness journey.',
+        '4.9/5 rating on Google with 60+ positive reviews from satisfied customers.',
     },
     {
       icon: <FaShippingFast size={32} className="text-theme-primary" />,
-      title: 'Fast & Reliable Shipping',
+      title: 'All India Delivery',
       description:
-        'Quick delivery across India with proper storage conditions maintained.',
+        'Fast and reliable shipping across India with best-in-class rates.',
     },
   ];
 
@@ -125,21 +126,31 @@ const HomePage: React.FC = () => {
   return (
     <div className="animate-fade-in">
       <HeroSection
-        title="Your Fitness Journey Starts Here"
-        subtitle="Premium supplements and nutrition products for your health and wellness goals."
+        title="Best Supplement Store in Faridabad"
+        subtitle="15 years of trusted experience | All India delivery | 100% genuine products at lowest rates"
         backgroundImage={homepageImage}
       >
-        <Link
-          to="/shop"
-          className="mt-8 inline-block bg-theme-primary text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 transition duration-300 shadow-lg transform hover:scale-105"
-        >
-          Shop Now
-        </Link>
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex items-center gap-2 bg-white/90 dark:bg-black/90 px-4 py-2 rounded-full">
+            <span className="text-yellow-500">★★★★★</span>
+            <span className="text-gray-800 dark:text-gray-200 font-medium">
+              4.9/5 - Trusted by 60+ Happy Customers
+            </span>
+          </div>
+          <Link
+            to="/shop"
+            className="inline-block bg-theme-primary text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 transition duration-300 shadow-lg transform hover:scale-105"
+          >
+            Shop Now
+          </Link>
+        </div>
       </HeroSection>
 
       <OurPromise />
 
       <FeaturedProducts />
+
+      <Testimonials />
 
       <section className="container mx-auto px-6 py-12">
         {loading ? (
