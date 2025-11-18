@@ -204,15 +204,26 @@ const Header: React.FC = () => {
               </div>
             )}
             {isAuthenticated && (
-              <button
-                onClick={() => {
-                  logout();
-                  toggleMenu();
-                }}
-                className="w-full py-2.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 text-sm font-medium flex items-center justify-center gap-2"
-              >
-                <FaSignOutAlt /> Sign Out
-              </button>
+              <div className="space-y-2">
+                {user?.role === 'admin' && (
+                  <Link
+                    to="/admin"
+                    onClick={toggleMenu}
+                    className={`block px-4 py-2.5 rounded-lg text-base font-medium transition-colors text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800`}
+                  >
+                    Admin Panel
+                  </Link>
+                )}
+                <button
+                  onClick={() => {
+                    logout();
+                    toggleMenu();
+                  }}
+                  className="w-full py-2.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 text-sm font-medium flex items-center justify-center gap-2"
+                >
+                  <FaSignOutAlt /> Sign Out
+                </button>
+              </div>
             )}
           </div>
         </div>
