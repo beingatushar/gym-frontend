@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { FaChevronRight } from 'react-icons/fa';
+import { Link, useParams } from 'react-router-dom';
 
-import { Product } from '../types/product.types';
-import { useProductStore } from '../stores/useProductStore';
 import useCartStore from '../stores/useCartStore';
+import { useProductStore } from '../stores/useProductStore';
+import { Product } from '../types/product.types';
 
 import Spinner from '../components/common/Spinner';
-import ProductInformation from '../components/ProductInformation';
 import { ProductCard } from '../components/ProductCard';
 import ProductImage from '../components/ProductImage';
+import ProductInformation from '../components/ProductInformation';
 
 const ProductNotFound: React.FC = () => (
   <div className="flex flex-col items-center justify-center text-center py-20 min-h-[60vh]">
@@ -30,7 +30,7 @@ const ProductNotFound: React.FC = () => (
 );
 
 const Breadcrumb: React.FC<{ product: Product }> = ({ product }) => (
-  <nav className="text-sm mb-8 flex items-center space-x-2 text-gray-500 dark:text-gray-400 flex-wrap">
+  <nav className="text-sm my-8 flex items-center space-x-2 text-gray-500 dark:text-gray-400 flex-wrap">
     <Link to="/" className="hover:text-theme-primary">
       Home
     </Link>
