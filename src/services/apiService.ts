@@ -1,16 +1,15 @@
 import axios, { AxiosError } from 'axios';
-import { Product, ProductSortOption } from '../types/product.types.ts';
+import { AuthResponse, LoginCredentials, SignupCredentials } from '../types/auth.types';
+import { Product, ProductSortOption } from '../types/product.types';
 
 // --- Type Definitions ---
 
-// Matches the backend's ApiError structure for better error handling
 interface ApiErrorResponse {
   success: boolean;
   message: string;
   stack?: string;
 }
 
-// Matches the backend's ApiResponse structure
 interface ApiResponse<T> {
   success: boolean;
   message: string;
@@ -23,18 +22,52 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
 });
 
+// Add a request interceptor to include the token in headers
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('auth-token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // --- Error Handling ---
 
 const handleApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
     const err = error as AxiosError<ApiErrorResponse>;
-    // Prioritize the structured error message from our backend
     return err.response?.data?.message || err.message;
   }
   return 'An unknown error occurred';
 };
 
-// --- API Service Functions ---
+// --- Auth Service Functions ---
+
+export const loginUser = async (credentials: LoginCredentials): Promise<AuthResponse> => {
+  try {
+    // We expect the backend to return ApiResponse containing AuthResponse in the 'data' field
+    const { data: apiResponse } = await api.post<ApiResponse<AuthResponse>>('/api/user/login', credentials);
+
+    // Correctly return the inner data ({ user, token })
+    return apiResponse.data;
+  } catch (error: unknown) {
+    throw new Error(handleApiError(error));
+  }
+};
+
+export const signupUser = async (credentials: SignupCredentials): Promise<AuthResponse> => {
+  try {
+    const { data: apiResponse } = await api.post<ApiResponse<AuthResponse>>('/api/user/signup', credentials);
+    return apiResponse.data;
+  } catch (error: unknown) {
+    throw new Error(handleApiError(error));
+  }
+};
+
+// --- Product Service Functions ---
 
 export const fetchAllProducts = async (options?: {
   categories?: string[];
@@ -45,7 +78,6 @@ export const fetchAllProducts = async (options?: {
   try {
     const params = new URLSearchParams();
     if (options?.categories && options.categories.length > 0) {
-      // The backend expects a JSON stringified array
       params.append('category', JSON.stringify(options.categories));
     }
     if (options?.sortBy) {
@@ -60,8 +92,6 @@ export const fetchAllProducts = async (options?: {
 
     const url = `/api/products?${params.toString()}`;
     const { data: apiResponse } = await api.get<ApiResponse<Product[]>>(url);
-
-    // Return the nested data property
     return apiResponse.data;
   } catch (error: unknown) {
     throw new Error(handleApiError(error));
@@ -124,7 +154,7 @@ export const deleteProduct = async (id: string): Promise<{ id: string }> => {
     const { data: apiResponse } = await api.delete<ApiResponse<{ id: string }>>(
       `/api/products/${id}`
     );
-    return apiResponse.data; // The backend now returns the ID of the deleted product
+    return apiResponse.data;
   } catch (error: unknown) {
     throw new Error(handleApiError(error));
   }
