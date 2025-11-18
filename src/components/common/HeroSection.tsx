@@ -15,25 +15,38 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   return (
     <section
-      className="bg-cover bg-center h-[70vh] md:h-screen flex items-center justify-center text-white relative"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      className="relative h-[55vh] sm:h-[65vh] md:h-[80vh] flex items-center justify-center overflow-hidden"
       aria-label={title}
     >
-      {/* Base dark overlay for contrast and readability */}
-      <div className="absolute inset-0 bg-black bg-opacity-50" />
-      {/* Themed color tint overlay for dynamic branding */}
-      <div className="absolute inset-0 bg-theme-primary opacity-20" />
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      />
 
-      <div className="relative text-center px-4 animate-fade-in-up">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 text-shadow-lg">
+      {/* Gradients for readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-black/20" />
+
+      {/* Content - Compact for Mobile */}
+      <div className="relative z-10 container mx-auto px-4 text-center text-white max-w-3xl mt-10">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-3 sm:mb-6 drop-shadow-lg animate-fade-in-up leading-tight">
           {title}
         </h1>
         {subtitle && (
-          <p className="text-lg md:text-2xl font-light max-w-2xl mx-auto text-shadow">
+          <p
+            className="text-sm sm:text-lg md:text-xl font-medium text-gray-200 max-w-xl mx-auto leading-relaxed mb-6 sm:mb-8 drop-shadow-md animate-fade-in-up opacity-0"
+            style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}
+          >
             {subtitle}
           </p>
         )}
-        {children}
+        <div
+          className="animate-fade-in-up opacity-0"
+          style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}
+        >
+          {children}
+        </div>
       </div>
     </section>
   );

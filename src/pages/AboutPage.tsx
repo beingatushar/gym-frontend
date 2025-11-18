@@ -1,7 +1,9 @@
 import React from 'react';
 import aboutImage from '../assets/about_us.jpg';
 import bhavishya_image from '../assets/bhavishya3.png';
+import harshit_image from '../assets/harshit.png';
 import sonu_image from '../assets/sonu3.jpg';
+import tushar_image from '../assets/tushar.png';
 import HeroSection from '../components/common/HeroSection';
 
 const TeamMember: React.FC<{ member: TeamMemberProps }> = ({ member }) => (
@@ -29,10 +31,10 @@ const AboutPage: React.FC = () => {
     {
       id: 1,
       name: 'Sonu Goyal',
-      role: 'Founder & CEO',
+      role: 'CEO and Founder',
       image: sonu_image,
       description:
-        'Fitness enthusiast and visionary leader with over 10 years of experience in the fitness industry, dedicated to providing quality gym equipment.',
+        'Visionary leader with over 15 years of experience in the supplement industry. Dedicated to providing genuine supplements at the lowest rates across India.',
     },
     {
       id: 2,
@@ -40,23 +42,23 @@ const AboutPage: React.FC = () => {
       role: 'Operations Lead',
       image: bhavishya_image,
       description:
-        'Ensures seamless operations and customer satisfaction while maintaining our high standards for quality fitness products and services.',
+        'Key team member ensuring customer satisfaction and maintaining high standards in product quality and service delivery.',
     },
     {
       id: 3,
       name: 'Harshit Goyal',
       role: 'Web Developer',
-      image: 'https://i.pravatar.cc/300?u=harshit',
+      image: harshit_image,
       description:
-        'Creates and maintains our digital platform, delivering an exceptional online shopping experience for fitness enthusiasts worldwide.',
+        'Dedicated team member contributing to business growth and customer service excellence.',
     },
     {
       id: 4,
       name: 'Tushar Aggarwal',
       role: 'Web Developer',
-      image: 'https://i.pravatar.cc/300?u=harshit',
+      image: tushar_image,
       description:
-        'Creates and maintains our digital platform, delivering an exceptional online shopping experience for fitness enthusiasts worldwide.',
+        'Valuable team member helping to maintain our reputation as the best supplement store in Faridabad.',
     },
   ];
 
@@ -74,24 +76,39 @@ const AboutPage: React.FC = () => {
             Welcome to Shelly Nutrition
           </h2>
           <div className="mb-6">
-            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-              Best Supplement Store in Faridabad with a 4.9/5 Google Rating
+            <p className="text-xl text-theme-primary font-semibold mb-4">
+              Best Supplement Store in Faridabad
             </p>
             <div className="flex items-center justify-center gap-2 mt-2">
               <span className="text-yellow-500">★★★★★</span>
               <span className="text-gray-600 dark:text-gray-400">
-                (4.960 Google reviews)
+                (4.9/5 - 60+ Google reviews)
               </span>
             </div>
           </div>
-          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            Founded by Sonu Goyal, Shelly Nutrition is your trusted partner in
-            fitness and wellness. Located in Sector 51, Faridabad, we specialize
-            in premium quality supplements and nutritional products designed to
-            support your fitness journey. With over a decade of experience in
-            the industry, we provide carefully selected supplements, expert
-            guidance, and personalized nutrition solutions.
-          </p>
+          <div className="space-y-4 text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+            <p>
+              Founded by Sonu Goyal (CEO and Founder), Shelly Nutrition has
+              established itself as the most trusted name in supplements and
+              health products in Faridabad. With an impressive legacy of 15
+              years in the industry, we have built a reputation for providing
+              100% genuine supplements at the most competitive rates across
+              India.
+            </p>
+            <p>
+              Located at 1185, Nangla Rd, near five star cable, Ghazipur, Sector
+              51, Faridabad, our store has become a landmark destination for
+              fitness enthusiasts and health-conscious individuals. What sets us
+              apart is not just our extensive range of supplements, but our
+              commitment to customer satisfaction and expert guidance.
+            </p>
+            <p>
+              Our success is reflected in our outstanding customer reviews and
+              ratings. With a remarkable 4.9/5 rating on Google from over 60
+              satisfied customers, we take pride in maintaining the highest
+              standards of product quality and service excellence.
+            </p>
+          </div>
         </div>
       </section>
 
