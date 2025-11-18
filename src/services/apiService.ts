@@ -190,3 +190,29 @@ export const cleanProducts = async (): Promise<{
     throw new Error(handleApiError(error));
   }
 };
+
+export interface BannerData {
+  content: string;
+}
+
+export const getBanner = async (): Promise<BannerData> => {
+  try {
+    const { data: apiResponse } =
+      await api.get<ApiResponse<BannerData>>('/api/banner');
+    return apiResponse.data;
+  } catch (error) {
+    return { content: 'Welcome to Shelly Nutrition!' };
+  }
+};
+
+export const updateBanner = async (content: string): Promise<BannerData> => {
+  try {
+    const { data: apiResponse } = await api.post<ApiResponse<BannerData>>(
+      '/api/banner',
+      { content }
+    );
+    return apiResponse.data;
+  } catch (error: unknown) {
+    throw new Error(handleApiError(error));
+  }
+};
