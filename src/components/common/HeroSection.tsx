@@ -15,7 +15,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   return (
     <section
-      className="relative h-[55vh] sm:h-[65vh] md:h-[80vh] flex items-center justify-center overflow-hidden"
+      className="relative mt-10 h-[55vh] sm:h-[65vh] md:h-[80vh] flex items-center justify-center overflow-hidden"
       aria-label={title}
     >
       {/* Background Image */}
