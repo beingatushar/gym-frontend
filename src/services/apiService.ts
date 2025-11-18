@@ -1,5 +1,9 @@
 import axios, { AxiosError } from 'axios';
-import { AuthResponse, LoginCredentials, SignupCredentials } from '../types/auth.types';
+import {
+  AuthResponse,
+  LoginCredentials,
+  SignupCredentials,
+} from '../types/auth.types';
 import { Product, ProductSortOption } from '../types/product.types';
 
 // --- Type Definitions ---
@@ -46,10 +50,15 @@ const handleApiError = (error: unknown): string => {
 
 // --- Auth Service Functions ---
 
-export const loginUser = async (credentials: LoginCredentials): Promise<AuthResponse> => {
+export const loginUser = async (
+  credentials: LoginCredentials
+): Promise<AuthResponse> => {
   try {
     // We expect the backend to return ApiResponse containing AuthResponse in the 'data' field
-    const { data: apiResponse } = await api.post<ApiResponse<AuthResponse>>('/api/user/login', credentials);
+    const { data: apiResponse } = await api.post<ApiResponse<AuthResponse>>(
+      '/api/user/login',
+      credentials
+    );
 
     // Correctly return the inner data ({ user, token })
     return apiResponse.data;
@@ -58,9 +67,14 @@ export const loginUser = async (credentials: LoginCredentials): Promise<AuthResp
   }
 };
 
-export const signupUser = async (credentials: SignupCredentials): Promise<AuthResponse> => {
+export const signupUser = async (
+  credentials: SignupCredentials
+): Promise<AuthResponse> => {
   try {
-    const { data: apiResponse } = await api.post<ApiResponse<AuthResponse>>('/api/user/signup', credentials);
+    const { data: apiResponse } = await api.post<ApiResponse<AuthResponse>>(
+      '/api/user/signup',
+      credentials
+    );
     return apiResponse.data;
   } catch (error: unknown) {
     throw new Error(handleApiError(error));
