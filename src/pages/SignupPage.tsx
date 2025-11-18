@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { FaEnvelope, FaLock, FaPhone, FaUser } from 'react-icons/fa';
+import {
+  FaArrowRight,
+  FaEnvelope,
+  FaLock,
+  FaPhone,
+  FaUser,
+} from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
-import HeroSection from '../components/common/HeroSection';
 import { useAuthStore } from '../stores/useAuthStore';
 
 const SignupPage: React.FC = () => {
@@ -42,26 +47,30 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <>
-      <HeroSection
-        title="Join Us"
-        backgroundImage="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=1920"
-        subtitle="Create an account to start your fitness journey"
-      />
-      <div className="min-h-[60vh] flex items-center justify-center px-4 py-12 bg-gray-50 dark:bg-brand-dark">
-        <div className="w-full max-w-md bg-white dark:bg-brand-dark-secondary rounded-xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">
-            Create Account
-          </h2>
+    <div className="min-h-screen pt-20 pb-12 flex items-center justify-center bg-gray-50 dark:bg-brand-dark relative overflow-hidden">
+      {/* Subtle Background Orbs */}
+      <div className="absolute top-0 left-1/4 w-64 h-64 bg-theme-primary/10 rounded-full blur-3xl -translate-y-1/2" />
+      <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl translate-y-1/2" />
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+      <div className="w-full max-w-md relative z-10 p-4">
+        <div className="bg-white dark:bg-brand-dark-secondary border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl p-6 sm:p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight mb-1">
+              Create Account
+            </h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Join us to start your fitness journey
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">
                 Full Name
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaUser className="text-gray-400" />
+                  <FaUser className="text-gray-400 text-xs" />
                 </div>
                 <input
                   type="text"
@@ -69,19 +78,19 @@ const SignupPage: React.FC = () => {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full pl-9 pr-3 py-2.5 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-theme-primary focus:border-theme-primary text-sm text-gray-900 dark:text-white placeholder-gray-400"
                   placeholder="John Doe"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">
                 Email Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaEnvelope className="text-gray-400" />
+                  <FaEnvelope className="text-gray-400 text-xs" />
                 </div>
                 <input
                   type="email"
@@ -89,38 +98,38 @@ const SignupPage: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full pl-9 pr-3 py-2.5 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-theme-primary focus:border-theme-primary text-sm text-gray-900 dark:text-white placeholder-gray-400"
                   placeholder="you@example.com"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">
                 Mobile Number
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaPhone className="text-gray-400" />
+                  <FaPhone className="text-gray-400 text-xs" />
                 </div>
                 <input
                   type="tel"
                   name="mobile"
                   value={formData.mobile}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full pl-9 pr-3 py-2.5 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-theme-primary focus:border-theme-primary text-sm text-gray-900 dark:text-white placeholder-gray-400"
                   placeholder="10-digit mobile number"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">
                 Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaLock className="text-gray-400" />
+                  <FaLock className="text-gray-400 text-xs" />
                 </div>
                 <input
                   type="password"
@@ -128,19 +137,19 @@ const SignupPage: React.FC = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full pl-9 pr-3 py-2.5 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-theme-primary focus:border-theme-primary text-sm text-gray-900 dark:text-white placeholder-gray-400"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">
                 Confirm Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaLock className="text-gray-400" />
+                  <FaLock className="text-gray-400 text-xs" />
                 </div>
                 <input
                   type="password"
@@ -148,7 +157,7 @@ const SignupPage: React.FC = () => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full pl-9 pr-3 py-2.5 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-theme-primary focus:border-theme-primary text-sm text-gray-900 dark:text-white placeholder-gray-400"
                   placeholder="••••••••"
                 />
               </div>
@@ -157,24 +166,32 @@ const SignupPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-theme-primary text-white py-2.5 rounded-lg font-semibold hover:opacity-90 transition disabled:opacity-50"
+              className="w-full group flex justify-center items-center gap-2 py-2.5 px-4 text-sm font-bold rounded-lg text-white bg-theme-primary hover:opacity-90 transition-all shadow-md disabled:opacity-70 mt-4"
             >
               {isLoading ? 'Creating Account...' : 'Sign Up'}
+              {!isLoading && (
+                <FaArrowRight
+                  size={12}
+                  className="group-hover:translate-x-0.5 transition-transform"
+                />
+              )}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-            Already have an account?{' '}
-            <Link
-              to="/login"
-              className="text-theme-primary hover:underline font-medium"
-            >
-              Log in
-            </Link>
-          </p>
+          <div className="mt-6 text-center">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Already have an account?{' '}
+              <Link
+                to="/login"
+                className="font-bold text-theme-primary hover:underline"
+              >
+                Log in
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
