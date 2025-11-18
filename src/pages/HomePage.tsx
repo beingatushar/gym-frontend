@@ -150,8 +150,6 @@ const HomePage: React.FC = () => {
 
       <FeaturedProducts />
 
-      <Testimonials />
-
       <section className="container mx-auto px-6 py-12">
         {loading ? (
           <div className="flex justify-center">
@@ -165,6 +163,7 @@ const HomePage: React.FC = () => {
           </div>
         )}
       </section>
+      <Testimonials />
     </div>
   );
 };
