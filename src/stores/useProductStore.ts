@@ -21,6 +21,7 @@ interface ProductStore {
   deleteProduct: (id: string) => Promise<void>;
   cleanProducts: () => Promise<{ updatedCount: number; totalProducts: number }>;
   uploadImage: (imageFile: File) => Promise<string>;
+  fetchFeaturedProducts: () => Promise<Product[]>;
 }
 
 export const useProductStore = create<ProductStore>((set) => ({
@@ -31,6 +32,15 @@ export const useProductStore = create<ProductStore>((set) => ({
     set({ error: null });
     try {
       return await apiService.fetchAllProducts(options);
+    } catch (error: any) {
+      set({ error: error.message });
+      throw error;
+    }
+  },
+  fetchFeaturedProducts: async () => {
+    set({ error: null });
+    try {
+      return await apiService.getFeaturedProducts();
     } catch (error: any) {
       set({ error: error.message });
       throw error;

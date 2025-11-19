@@ -182,6 +182,7 @@ const AdminPage: React.FC = () => {
       description: '',
       price: 0,
       image: '',
+      isFeatured: false,
     }),
     []
   );
@@ -213,10 +214,12 @@ const AdminPage: React.FC = () => {
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
+      const { name, value, type } = e.target;
+      const checked = (e.target as HTMLInputElement).checked;
+
       setNewProduct((prev) => ({
         ...prev,
-        [name]: valueAsNumber(name, value),
+        [name]: type === 'checkbox' ? checked : valueAsNumber(name, value),
       }));
     },
     []

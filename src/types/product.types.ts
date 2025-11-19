@@ -14,6 +14,7 @@ export interface Product {
   material?: string;
   isDeleted: boolean;
   numberOfClicks: number;
+  isFeatured?: boolean;
 }
 export interface CartItem {
   id: string;

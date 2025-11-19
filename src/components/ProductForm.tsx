@@ -81,6 +81,22 @@ const ProductForm: React.FC<ProductFormProps> = ({
               onChange={onInputChange}
             />
           </div>
+          <div className="flex items-center gap-3 sm:col-span-2 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-600">
+            <input
+              type="checkbox"
+              id="isFeatured"
+              name="isFeatured"
+              checked={product.isFeatured || false}
+              onChange={onInputChange}
+              className="w-5 h-5 text-theme-primary rounded border-gray-300 focus:ring-theme-primary cursor-pointer"
+            />
+            <label
+              htmlFor="isFeatured"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer select-none"
+            >
+              Mark as Featured Product
+            </label>
+          </div>
           <ImageUploadField
             onImageUpload={onImageUpload}
             newProduct={product}
