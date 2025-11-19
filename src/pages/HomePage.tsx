@@ -15,7 +15,7 @@ import homepageImage from '../assets/home.png';
 import ProductCardSkeleton from '../components/common/ProductCardSkeleton';
 
 const FeaturedProducts: React.FC = () => {
-  const { fetchAllProducts } = useProductStore();
+  const { fetchFeaturedProducts } = useProductStore();
   const [featured, setFeatured] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -23,10 +23,8 @@ const FeaturedProducts: React.FC = () => {
     const loadFeatured = async () => {
       setIsLoading(true);
       try {
-        const products = await fetchAllProducts({
-          sortBy: 'rating-high-to-low',
-        });
-        setFeatured(products.slice(0, 4));
+        const products = await fetchFeaturedProducts();
+        setFeatured(products);
       } catch (error) {
         console.error('Failed to fetch featured products', error);
       } finally {
@@ -34,7 +32,7 @@ const FeaturedProducts: React.FC = () => {
       }
     };
     loadFeatured();
-  }, [fetchAllProducts]);
+  }, [fetchFeaturedProducts]);
 
   return (
     <section className="bg-white dark:bg-brand-dark py-16">
@@ -131,15 +129,15 @@ const HomePage: React.FC = () => {
         backgroundImage={homepageImage}
       >
         <div className="flex flex-col items-center gap-4">
-          <div className="flex items-center gap-2 bg-white/90 dark:bg-black/90 px-4 py-2 rounded-full">
+          <div className="flex items-center gap-2 bg-white/90 dark:bg-black/90 px-1 py-1 rounded-full">
             <span className="text-yellow-500">★★★★★</span>
             <span className="text-gray-800 dark:text-gray-200 font-medium">
-              4.9/5 - Trusted by 60+ Happy Customers
+              4.9/5 - Trusted by 500+ Happy Customers
             </span>
           </div>
           <Link
             to="/shop"
-            className="inline-block bg-theme-primary text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 transition duration-300 shadow-lg transform hover:scale-105"
+            className="inline-block bg-theme-primary text-white px-2 py-3 rounded-full font-semibold hover:opacity-90 transition duration-300 shadow-lg transform hover:scale-105"
           >
             Shop Now
           </Link>

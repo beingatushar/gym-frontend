@@ -67,6 +67,16 @@ export const loginUser = async (
   }
 };
 
+export const getFeaturedProducts = async (): Promise<Product[]> => {
+  try {
+    const { data: apiResponse } = await api.get<ApiResponse<Product[]>>(
+      '/api/products/featured'
+    );
+    return apiResponse.data;
+  } catch (error: unknown) {
+    throw new Error(handleApiError(error));
+  }
+};
 export const signupUser = async (
   credentials: SignupCredentials
 ): Promise<AuthResponse> => {
