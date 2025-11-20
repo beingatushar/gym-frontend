@@ -54,13 +54,10 @@ export const loginUser = async (
   credentials: LoginCredentials
 ): Promise<AuthResponse> => {
   try {
-    // We expect the backend to return ApiResponse containing AuthResponse in the 'data' field
     const { data: apiResponse } = await api.post<ApiResponse<AuthResponse>>(
       '/api/user/login',
       credentials
     );
-
-    // Correctly return the inner data ({ user, token })
     return apiResponse.data;
   } catch (error: unknown) {
     throw new Error(handleApiError(error));
