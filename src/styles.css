@@ -61,3 +61,76 @@ button {
   animation-play-state: paused;
   cursor: default;
 }
+/* --- Animated Mesh Gradient Background --- */
+.bg-mesh-gradient {
+  background-color: #111;
+  background-image:
+    radial-gradient(at 0% 0%, hsla(37, 96%, 50%, 0.2) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(250, 100%, 70%, 0.1) 0px, transparent 50%),
+    radial-gradient(
+      at 100% 100%,
+      hsla(37, 100%, 50%, 0.1) 0px,
+      transparent 50%
+    ),
+    radial-gradient(at 0% 100%, hsla(0, 0%, 20%, 0.3) 0px, transparent 50%);
+  background-size: 120% 120%;
+  animation: mesh-pulse 15s ease-in-out infinite alternate;
+}
+
+@keyframes mesh-pulse {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+/* --- Glitch Effect for Hardcore Titles --- */
+.glitch-hover:hover {
+  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  color: var(--theme-primary);
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+/* --- Text Reveal Mask --- */
+.reveal-text-container {
+  overflow: hidden;
+}
+
+.reveal-text {
+  animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform: translateY(110%);
+  opacity: 0;
+}
+
+@keyframes revealUp {
+  from {
+    transform: translateY(110%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

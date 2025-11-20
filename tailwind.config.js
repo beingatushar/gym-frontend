@@ -43,6 +43,10 @@ export default {
           '50%': { transform: 'translateY(-10px)' },
         }
       },
+      slideUp: {
+        '0%': { transform: 'translateY(100%)' },
+        '100%': { transform: 'translateY(0)' },
+      }
     },
   },
   plugins: [],

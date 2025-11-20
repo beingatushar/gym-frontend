@@ -1,18 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { FaGift, FaShippingFast, FaStar } from 'react-icons/fa';
+import { FaArrowRight, FaGift, FaShippingFast, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import Testimonials from '../components/common/Testimonials';
 
+// Components
 import CategorySlider from '../components/CategorySlider';
 import HeroSection from '../components/common/HeroSection';
+import MagneticButton from '../components/common/MagneticButton';
+import PageMeta from '../components/common/PageMeta'; // Import PageMeta
+import ProductCardSkeleton from '../components/common/ProductCardSkeleton';
 import Spinner from '../components/common/Spinner';
+import SpotlightCard from '../components/common/SpotlightCard';
+import Testimonials from '../components/common/Testimonials';
+import TiltCard from '../components/common/TiltCard';
 import { ProductCard } from '../components/ProductCard';
+
+// New Engagement Components
+import BrandMarquee from '../components/home/BrandMarquee';
+import Newsletter from '../components/home/Newsletter';
+import StatsTicker from '../components/home/StatsTicker';
+
+// Store & Types
 import { useProductStore } from '../stores/useProductStore';
 import { Product } from '../types/product.types';
 
+// Assets
 import homepageImage from '../assets/home.png';
-import ProductCardSkeleton from '../components/common/ProductCardSkeleton';
+
+// ... (FeaturedProducts and OurPromise components remain the same as your current revolutionised version) ...
+// For brevity in this response, assume the sub-components are here or imported.
+// I will re-include them to ensure the file is complete and copy-paste ready.
 
 const FeaturedProducts: React.FC = () => {
   const { fetchFeaturedProducts } = useProductStore();
@@ -35,18 +52,35 @@ const FeaturedProducts: React.FC = () => {
   }, [fetchFeaturedProducts]);
 
   return (
-    <section className="bg-white dark:bg-brand-dark py-16">
+    <section className="bg-white dark:bg-brand-dark py-20 relative z-10">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">
-          Featured Products
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+          <div>
+            <h4 className="text-theme-primary font-bold uppercase tracking-widest text-sm mb-2">
+              Hand-picked for you
+            </h4>
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-gray-100 tracking-tighter">
+              Featured Drops
+            </h2>
+          </div>
+          <Link
+            to="/shop"
+            className="group flex items-center gap-2 text-gray-500 hover:text-theme-primary transition-colors font-medium"
+          >
+            View All Products
+            <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
           {isLoading
             ? Array.from({ length: 4 }).map((_, index) => (
                 <ProductCardSkeleton key={index} />
               ))
             : featured.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <TiltCard key={product.id} className="h-full" intensity={10}>
+                  <ProductCard product={product} />
+                </TiltCard>
               ))}
         </div>
       </div>
@@ -57,42 +91,51 @@ const FeaturedProducts: React.FC = () => {
 const OurPromise: React.FC = () => {
   const promises = [
     {
-      icon: <FaGift size={32} className="text-theme-primary" />,
-      title: '100% Genuine Products',
+      icon: <FaGift size={40} className="text-theme-primary" />,
+      title: '100% Genuine',
       description:
-        '15 years of trusted experience in providing authentic supplements at the lowest rates in India.',
+        'Direct sourcing from authorized importers. No middle-men, no fakes.',
     },
     {
-      icon: <FaStar size={32} className="text-theme-primary" />,
-      title: 'Highly Rated Service',
+      icon: <FaStar size={40} className="text-theme-primary" />,
+      title: 'Top Rated',
       description:
-        '4.9/5 rating on Google with 60+ positive reviews from satisfied customers.',
+        'Rated 4.9/5 on Google. We build relationships, not just customer lists.',
     },
     {
-      icon: <FaShippingFast size={32} className="text-theme-primary" />,
-      title: 'All India Delivery',
+      icon: <FaShippingFast size={40} className="text-theme-primary" />,
+      title: 'Fast Delivery',
       description:
-        'Fast and reliable shipping across India with best-in-class rates.',
+        'Premium packaging and express shipping across every pincode in India.',
     },
   ];
 
   return (
-    <section className="bg-theme-secondary dark:bg-brand-dark-secondary py-16">
+    <section className="py-24 bg-gray-50 dark:bg-brand-dark-secondary/50">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12">
-          Our Promise
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-          {promises.map((promise) => (
-            <div key={promise.title} className="p-6">
-              <div className="flex justify-center mb-4">{promise.icon}</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-gray-100 mb-6 tracking-tight">
+            Why Shelly Nutrition?
+          </h2>
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            We don't just sell supplements; we fuel your obsession with
+            excellence.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {promises.map((promise, idx) => (
+            <SpotlightCard key={idx} className="h-full text-center group">
+              <div className="mb-6 inline-flex p-4 rounded-2xl bg-theme-secondary/50 dark:bg-white/5 group-hover:scale-110 transition-transform duration-300">
+                {promise.icon}
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                 {promise.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                 {promise.description}
               </p>
-            </div>
+            </SpotlightCard>
           ))}
         </div>
       </div>
@@ -122,46 +165,71 @@ const HomePage: React.FC = () => {
   }, [getAllCategories]);
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in overflow-x-hidden">
+      {/* DYNAMIC TITLE */}
+      <PageMeta title="Best Supplement Store in Faridabad" />
+
+      {/* 1. Hero Section with Magnetic Button */}
       <HeroSection
         title="Best Supplement Store in Faridabad"
         subtitle="15 years of trusted experience | All India delivery | 100% genuine products at lowest rates"
         backgroundImage={homepageImage}
       >
-        <div className="flex flex-col items-center gap-4">
-          <div className="flex items-center gap-2 bg-white/90 dark:bg-black/90 px-1 py-1 rounded-full">
-            <span className="text-yellow-500">★★★★★</span>
-            <span className="text-gray-800 dark:text-gray-200 font-medium">
-              4.9/5 - Trusted by 500+ Happy Customers
+        <div className="flex flex-col items-center gap-6">
+          <MagneticButton>
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-2 bg-theme-primary text-white px-8 py-4 rounded-full font-bold text-lg hover:brightness-110 transition-all shadow-xl shadow-theme-primary/40"
+            >
+              Shop Now <FaArrowRight />
+            </Link>
+          </MagneticButton>
+
+          <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full">
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <FaStar key={i} size={12} className="text-yellow-400" />
+              ))}
+            </div>
+            <span className="text-white text-xs font-bold tracking-wide">
+              TRUSTED BY 500+ ATHLETES
             </span>
           </div>
-          <Link
-            to="/shop"
-            className="inline-block bg-theme-primary text-white px-2 py-3 rounded-full font-semibold hover:opacity-90 transition duration-300 shadow-lg transform hover:scale-105"
-          >
-            Shop Now
-          </Link>
         </div>
       </HeroSection>
 
-      <OurPromise />
+      {/* 2. Live Stats Ticker */}
+      <StatsTicker />
 
+      {/* 3. Infinite Brand Marquee */}
+      <BrandMarquee />
+
+      {/* 4. Featured Products (3D Tilt) */}
       <FeaturedProducts />
 
-      <section className="container mx-auto px-6 py-12">
+      {/* 5. Our Promise (Spotlight) */}
+      <OurPromise />
+
+      {/* 6. Category Sliders */}
+      <section className="container mx-auto px-6 py-16">
         {loading ? (
-          <div className="flex justify-center">
-            <Spinner />
+          <div className="flex justify-center py-20">
+            <Spinner size="lg" />
           </div>
         ) : (
-          <div className="space-y-12">
+          <div className="space-y-16">
             {allCategories.map((category) => (
               <CategorySlider key={category} category={category} />
             ))}
           </div>
         )}
       </section>
+
+      {/* 7. Testimonials */}
       <Testimonials />
+
+      {/* 8. Newsletter CTA */}
+      <Newsletter />
     </div>
   );
 };

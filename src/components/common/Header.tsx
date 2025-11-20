@@ -33,21 +33,24 @@ const Header: React.FC = () => {
     { to: '/contact', label: 'Contact' },
   ];
 
-  return (
-    <header className="fixed w-full z-50 top-0 left-0 transition-all duration-300">
-      {/* The logic is now encapsulated here */}
-      <AnnouncementBanner />
+  // Logic for the floating "capsule" effect
+  const headerClasses = scrolled
+    ? 'top-4 w-[95%] md:w-[90%] max-w-5xl rounded-full bg-white/80 dark:bg-brand-dark/80 backdrop-blur-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 py-2'
+    : 'top-0 w-full bg-white dark:bg-brand-dark py-2 sm:py-4 border-b border-transparent';
 
-      {/* Compact Main Navbar */}
-      <div
-        className={`w-full transition-all duration-300 ${
-          scrolled
-            ? 'bg-white/90 dark:bg-brand-dark/90 backdrop-blur-md shadow-sm border-b border-gray-200/50 dark:border-gray-800/50 py-2'
-            : 'bg-white dark:bg-brand-dark py-2 sm:py-4 border-b border-transparent'
-        }`}
+  return (
+    <>
+      {/* Announcement Banner: Hides on scroll to reduce clutter */}
+      <div className={scrolled ? 'hidden' : 'block relative z-50'}>
+        <AnnouncementBanner />
+      </div>
+
+      {/* Main Floating Header */}
+      <header
+        className={`fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ease-in-out ${headerClasses}`}
       >
-        <div className="container mx-auto px-4 sm:px-6 flex justify-between items-center">
-          {/* Smaller Logo for Mobile */}
+        <div className="container mx-auto px-4 sm:px-6 flex justify-between items-center h-full">
+          {/* Logo */}
           <Link
             to="/"
             className="text-xl sm:text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-theme-primary to-purple-600 flex-shrink-0"
@@ -76,7 +79,7 @@ const Header: React.FC = () => {
             ))}
           </nav>
 
-          {/* Compact Actions */}
+          {/* Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="scale-90 sm:scale-100">
               <ThemeToggle />
@@ -145,7 +148,7 @@ const Header: React.FC = () => {
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Mobile Menu Drawer */}
       <div
@@ -228,7 +231,7 @@ const Header: React.FC = () => {
           </div>
         </div>
       </div>
-    </header>
+    </>
   );
 };
 

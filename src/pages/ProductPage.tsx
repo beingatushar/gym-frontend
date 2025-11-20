@@ -9,6 +9,7 @@ import useCartStore from '../stores/useCartStore';
 import { useProductStore } from '../stores/useProductStore';
 import { Product } from '../types/product.types';
 
+import PageMeta from '../components/common/PageMeta'; // Import PageMeta
 import Spinner from '../components/common/Spinner';
 import { ProductCard } from '../components/ProductCard';
 import ProductForm from '../components/ProductForm';
@@ -17,6 +18,7 @@ import ProductInformation from '../components/ProductInformation';
 
 const ProductNotFound: React.FC = () => (
   <div className="flex flex-col items-center justify-center text-center py-20 min-h-[60vh]">
+    <PageMeta title="Product Not Found" />
     <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">
       Product Not Found
     </h1>
@@ -216,6 +218,9 @@ const ProductPage: React.FC = () => {
 
   return (
     <div className="min-h-screen pt-20 pb-12 bg-white dark:bg-brand-dark transition-colors duration-300">
+      {/* DYNAMIC PAGE TITLE */}
+      <PageMeta title={previewProduct.name} />
+
       <div className="container mx-auto px-4">
         {/* --- Header & Controls --- */}
         <div className="flex justify-between items-center mb-6">
@@ -225,7 +230,6 @@ const ProductPage: React.FC = () => {
             <button
               onClick={() => {
                 setIsEditing(true);
-                // Smooth scroll to editor after a short delay to allow render
                 setTimeout(() => {
                   document
                     .getElementById('admin-editor-panel')
@@ -243,7 +247,7 @@ const ProductPage: React.FC = () => {
           className={clsx(
             'grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 transition-all duration-300',
             isEditing &&
-              'opacity-100 ring-4 ring-blue-500/10 rounded-3xl p-4 bg-blue-50/30 dark:bg-blue-900/5' // Highlight when editing
+              'opacity-100 ring-4 ring-blue-500/10 rounded-3xl p-4 bg-blue-50/30 dark:bg-blue-900/5'
           )}
         >
           <ProductImage
@@ -256,10 +260,9 @@ const ProductPage: React.FC = () => {
           />
         </div>
 
-        {/* --- Admin Editor Panel (Appears Below) --- */}
+        {/* --- Admin Editor Panel --- */}
         {isAdmin && isEditing && (
           <div id="admin-editor-panel" className="mt-12 animate-fade-in-up">
-            {/* Editor Toolbar */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-4 bg-gray-900 text-white rounded-xl shadow-xl">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-600 rounded-lg animate-pulse">
@@ -295,7 +298,6 @@ const ProductPage: React.FC = () => {
               </div>
             </div>
 
-            {/* The Form */}
             <div className="bg-gray-50 dark:bg-brand-dark-secondary border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-inner">
               <ProductForm
                 product={previewProduct}
@@ -311,7 +313,6 @@ const ProductPage: React.FC = () => {
           </div>
         )}
 
-        {/* --- Related Products (Hidden when editing to focus) --- */}
         {!isEditing && (
           <RelatedProducts
             category={previewProduct.category}
