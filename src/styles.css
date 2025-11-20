@@ -9,8 +9,9 @@ body {
 /* Define variables for all themes, including light and dark */
 body.theme-light,
 body.theme-dark {
-  --theme-primary: #ec4899;
-  --theme-secondary: #fce7f3;
+  /* Updated from Pink to Yellowish (Amber) [!code ++] */
+  --theme-primary: #f59e0b; /* [!code ++] */
+  --theme-secondary: #fffbeb; /* [!code ++] */
 }
 
 .theme-rose {
@@ -20,8 +21,7 @@ body.theme-dark {
 
 .theme-sky {
   --theme-primary: #0ea5e9;
-  --theme-secondary: #e0f2fe;
-  --theme-secondary: #f0f9ff;
+  --theme-secondary: #e0f2fe; /* Corrected from duplicate definition in original */
   --theme-text-on-primary: #ffffff;
 }
 
