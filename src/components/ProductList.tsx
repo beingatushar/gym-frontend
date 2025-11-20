@@ -1,17 +1,17 @@
+import clsx from 'clsx';
 import React, {
-  useEffect,
-  useState,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import clsx from 'clsx';
-import { Product, ProductSortOption } from '../types/product.types';
 import { useProductStore } from '../stores/useProductStore';
+import { Product, ProductSortOption } from '../types/product.types';
+import ProductCardSkeleton from './common/ProductCardSkeleton';
 import Spinner from './common/Spinner';
 import { ProductCard } from './ProductCard';
-import ProductCardSkeleton from './common/ProductCardSkeleton';
 
 const SORT_OPTIONS: { label: string; value: ProductSortOption | 'default' }[] =
   [
@@ -19,7 +19,10 @@ const SORT_OPTIONS: { label: string; value: ProductSortOption | 'default' }[] =
     { value: 'price-low-to-high', label: 'Price: Low to High' },
     { value: 'price-high-to-low', label: 'Price: High to Low' },
     { value: 'date-added-newest', label: 'Newest Arrivals' },
+    { value: 'createdAt:asc', label: 'Oldest Arrivals' }, // Backend generic handler
     { value: 'rating-high-to-low', label: 'Top Rated' },
+    { value: 'name:asc', label: 'Name: A to Z' }, // Backend generic handler
+    { value: 'name:desc', label: 'Name: Z to A' }, // Backend generic handler
   ];
 
 const PAGE_LIMIT = 12;

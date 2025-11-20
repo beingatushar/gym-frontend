@@ -13,9 +13,9 @@ export interface Product {
   tags?: string[];
   material?: string;
   isDeleted: boolean;
-  numberOfClicks: number;
   isFeatured?: boolean;
 }
+
 export interface CartItem {
   id: string;
   name: string;
@@ -28,8 +28,8 @@ export type ProductSortOption =
   | 'price-low-to-high'
   | 'price-high-to-low'
   | 'date-added-newest'
-  | 'date-added-oldest'
   | 'rating-high-to-low'
-  | 'name-a-z'
-  | 'name-z-a'
+  | 'name:asc' // Matches backend generic handler
+  | 'name:desc' // Matches backend generic handler
+  | 'createdAt:asc' // Matches backend generic handler
   | undefined;
