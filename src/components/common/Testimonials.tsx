@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaGoogle, FaQuoteLeft, FaStar } from 'react-icons/fa';
+import { FaGoogle, FaStar } from 'react-icons/fa';
 
 interface Testimonial {
   name: string;
@@ -59,84 +59,59 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
-  testimonial,
-}) => (
-  <div className="min-w-[280px] w-[280px] md:w-full bg-white dark:bg-brand-dark-secondary rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex-shrink-0 scroll-snap-align-start flex flex-col">
+const ReviewCard: React.FC<{ data: (typeof testimonials)[0] }> = ({ data }) => (
+  <div className="w-[350px] flex-shrink-0 rounded-2xl bg-white dark:bg-brand-dark-secondary p-6 shadow-sm border border-gray-100 dark:border-gray-800 mx-4">
     <div className="flex justify-between items-start mb-4">
       <div className="flex gap-1">
         {[...Array(5)].map((_, i) => (
-          <FaStar
-            key={i}
-            className={
-              i < testimonial.rating ? 'text-yellow-400' : 'text-gray-200'
-            }
-            size={14}
-          />
+          <FaStar key={i} className="text-yellow-400" size={12} />
         ))}
       </div>
-      <FaQuoteLeft className="text-theme-primary/20" size={20} />
+      <FaGoogle className="text-gray-300" />
     </div>
-
-    <p className="text-sm text-gray-600 dark:text-gray-300 mb-6 leading-relaxed line-clamp-4 flex-grow">
-      "{testimonial.text}"
+    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6 line-clamp-3">
+      "{data.text}"
     </p>
-
-    <div className="flex items-center justify-between pt-4 border-t border-gray-50 dark:border-gray-700/50 mt-auto">
-      <div>
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-          {testimonial.name}
-        </h3>
-        {/* Dynamically calculate the date */}
-        <span className="text-xs text-gray-400">
-          {getRelativeTime(testimonial.date)}
-        </span>
+    <div className="flex items-center gap-3">
+      <div className="h-8 w-8 rounded-full bg-gradient-to-br from-theme-primary to-purple-600 flex items-center justify-center text-white font-bold text-xs">
+        {data.name[0]}
       </div>
-      <FaGoogle className="text-gray-400" size={14} />
+      <div>
+        <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+          {data.name}
+        </h4>
+        <p className="text-[10px] text-gray-400">
+          {getRelativeTime(data.date)}
+        </p>
+      </div>
     </div>
   </div>
 );
 
 const Testimonials: React.FC = () => {
   return (
-    <section className="bg-gray-50 dark:bg-brand-dark py-12 overflow-hidden">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <FaGoogle size={20} className="text-theme-primary" />
-            <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">
-              Customer Reviews
-            </h2>
-          </div>
-          <div className="flex items-center justify-center gap-2 text-sm font-medium">
-            <span className="text-yellow-500 font-bold text-lg">4.9</span>
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <FaStar key={i} className="text-yellow-500" size={14} />
-              ))}
-            </div>
-            <span className="text-gray-500 dark:text-gray-400">
-              (60+ reviews)
-            </span>
-          </div>
-        </div>
-
-        <div className="text-center mb-10">
+    <section className="py-20 bg-gray-50 dark:bg-black/20 overflow-hidden">
+      <div className="container mx-auto px-6 text-center mb-12">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-4">
           <a
             href="https://maps.app.goo.gl/R1bn221b7L3tfd9g9"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-white dark:bg-blue-600/10 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-500/30 px-6 py-2.5 rounded-full text-sm font-bold hover:shadow-md transition-all duration-300 active:scale-95"
+            className="inline-flex items-center gap-2 text-md"
           >
-            <FaGoogle size={14} />
-            Leave us a Google Review!
+            <FaGoogle /> Verified Reviews
           </a>
         </div>
+        <h2 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white">
+          Don't just take our word for it.
+        </h2>
+      </div>
 
-        {/* Mobile: Horizontal Scroll | Desktop: Grid */}
-        <div className="flex md:grid md:grid-cols-2 gap-4 overflow-x-auto pb-8 md:pb-0 px-2 -mx-2 md:mx-0 scrollbar-hide snap-x snap-mandatory">
-          {testimonials.map((testimonial, index) => (
-            <TestimonialCard key={index} testimonial={testimonial} />
+      {/* Infinite Scroll Row 1 */}
+      <div className="flex overflow-hidden">
+        <div className="flex animate-marquee py-4">
+          {[...testimonials, ...testimonials].map((t, i) => (
+            <ReviewCard key={`r1-${i}`} data={t} />
           ))}
         </div>
       </div>

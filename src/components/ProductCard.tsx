@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import React, { useState } from 'react';
 import {
   FaCartPlus,
   FaEye,
@@ -17,20 +18,29 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { handleAddToCart, updateQuantity, removeFromCart, cart } =
+  const { handleAddToCart, cart, updateQuantity, removeFromCart } =
     useCartStore();
+  const [isHovered, setIsHovered] = useState(false);
 
-  // Check if item is already in cart to show quantity
+  // Check if item is in cart
   const cartItem = cart.find((item) => item.id === product.id);
   const quantity = cartItem ? cartItem.quantity : 0;
 
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleAddToCart(product);
+  };
+
   const handleIncrement = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     handleAddToCart(product);
   };
 
   const handleDecrement = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     if (quantity > 1) {
       updateQuantity(product.id, quantity - 1);
     } else {
@@ -39,108 +49,134 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <div
-      className={clsx(
-        'group relative flex flex-col bg-white dark:bg-brand-dark-secondary rounded-xl',
-        'transition-all duration-300 shadow-sm hover:shadow-md',
-        'border border-gray-100 dark:border-gray-800'
-      )}
+    <Link
+      to={`/product/${product.id}`}
+      className="group relative flex flex-col h-full w-full overflow-hidden rounded-3xl bg-white dark:bg-brand-dark-secondary border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-theme-primary/10"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Image Container */}
-      <Link
-        to={`/product/${product.id}`}
-        className="block relative overflow-hidden rounded-t-xl aspect-square"
-      >
-        {/* Top Left: Rating Badge */}
-        {product.rating && product.rating > 4.5 && (
-          <span className="absolute top-2 left-2 z-10 bg-white/90 dark:bg-black/80 backdrop-blur text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm flex items-center gap-1">
-            <FaStar className="text-yellow-400" size={8} /> Top
-          </span>
+      {/* Image Container - Fixed Aspect Ratio */}
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-50 dark:bg-brand-dark flex-shrink-0">
+        <img
+          loading="lazy"
+          src={product.image}
+          alt={product.name}
+          className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
+        />
+
+        {/* Overlay Gradient (Visible on Hover) */}
+        <div
+          className={clsx(
+            'absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent transition-opacity duration-300',
+            isHovered ? 'opacity-100' : 'opacity-0'
+          )}
+        />
+
+        {/* === TOP RIGHT: In-Cart Status Icon === */}
+        {quantity > 0 && (
+          <div className="absolute top-3 right-3 z-20 animate-fade-in-up">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-theme-primary text-white shadow-lg shadow-theme-primary/40 ring-2 ring-white dark:ring-brand-dark-secondary">
+              <FaShoppingBag size={12} />
+            </div>
+          </div>
         )}
 
-        {/* Top Right: Interactive Cart Control */}
-        <div className="absolute top-2 right-2 z-20">
+        {/* Floating Badges (Left) */}
+        <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
+          {product.isFeatured && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-yellow-400/90 backdrop-blur-sm px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-black shadow-lg">
+              <FaStar className="text-[10px]" /> Hot
+            </span>
+          )}
+          {(product.stock || 0) < 5 && (product.stock || 0) > 0 && (
+            <span className="inline-flex rounded-full bg-red-500/90 backdrop-blur-sm px-2.5 py-1 text-[10px] font-bold uppercase text-white shadow-lg">
+              Low Stock
+            </span>
+          )}
+        </div>
+
+        <div
+          className={clsx(
+            'absolute bottom-4 left-0 right-0 flex justify-center items-center gap-3 px-4 transition-transform duration-300 ease-out z-20',
+            isHovered || quantity > 0 ? 'translate-y-0' : 'translate-y-20'
+          )}
+        >
           {quantity > 0 ? (
-            // Active State: Counter with +/-
-            <div className="flex items-center bg-theme-primary text-white rounded-full shadow-lg animate-fade-in-up ring-2 ring-white dark:ring-brand-dark">
-              {/* Minus / Remove Button */}
+            <div
+              className="flex items-center gap-1 bg-white dark:bg-gray-900 rounded-full p-1 shadow-xl border border-gray-100 dark:border-gray-700"
+              onClick={(e) => e.preventDefault()}
+            >
               <button
                 onClick={handleDecrement}
-                className="w-8 h-8 flex items-center justify-center hover:bg-black/10 rounded-l-full transition-colors active:bg-black/20"
-                aria-label="Decrease quantity"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 transition-colors"
               >
                 {quantity === 1 ? <FaTrash size={10} /> : <FaMinus size={10} />}
               </button>
 
-              {/* Center: Number inside Cart Icon */}
-              <div className="relative flex items-center justify-center w-8 h-8 bg-white/10 border-x border-white/10">
-                <FaShoppingBag size={18} className="text-white" />{' '}
-                {/* Explicitly White */}
-                <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black pt-1 text-theme-primary">
-                  {quantity}
-                </span>
-              </div>
+              <span className="w-6 text-center text-sm font-bold text-gray-900 dark:text-white">
+                {quantity}
+              </span>
 
-              {/* Plus Button */}
               <button
                 onClick={handleIncrement}
-                className="w-8 h-8 flex items-center justify-center hover:bg-black/10 rounded-r-full transition-colors active:bg-black/20"
-                aria-label="Increase quantity"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-theme-primary text-white hover:brightness-110 transition-all shadow-md"
               >
                 <FaPlus size={10} />
               </button>
             </div>
           ) : (
-            // Inactive State: Simple Add Button
+            // Default Add Button
             <button
-              onClick={handleIncrement}
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-white/90 dark:bg-black/60 text-gray-700 dark:text-white hover:bg-theme-primary hover:text-white backdrop-blur-sm transition-all shadow-md active:scale-90"
-              aria-label="Add to cart"
+              onClick={handleQuickAdd}
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-white text-black px-4 py-3 text-xs font-bold uppercase tracking-wider shadow-xl hover:bg-theme-primary hover:text-white transition-colors"
             >
-              <FaCartPlus size={16} />
+              <FaCartPlus /> Add
             </button>
           )}
+
+          {/* View Details Button (Only shows when hovering and no quantity controls active to save space) */}
+          {quantity === 0 && (
+            <div className="flex items-center justify-center rounded-xl bg-white/20 backdrop-blur-md text-white px-4 py-3 text-xs font-bold uppercase shadow-xl hover:bg-white hover:text-black transition-colors">
+              <FaEye />
+            </div>
+          )}
         </div>
+      </div>
 
-        <img
-          loading="lazy"
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover"
-        />
-      </Link>
-
-      {/* Dense Content for Mobile */}
-      <div className="p-3 flex flex-col flex-grow">
-        <div className="flex-grow space-y-1">
-          <p className="text-[10px] font-bold text-theme-primary uppercase tracking-wide opacity-80">
+      <div className="relative p-5 flex flex-col flex-grow">
+        {/* Top Row: Category and Rating */}
+        <div className="mb-2 flex items-center justify-between">
+          <p className="text-xs font-bold uppercase tracking-widest text-theme-primary truncate max-w-[60%]">
             {product.category}
           </p>
-          <h3 className="text-sm font-bold text-gray-900 dark:text-white leading-snug line-clamp-2">
-            <Link to={`/product/${product.id}`}>{product.name}</Link>
+          <div className="flex items-center gap-1 text-yellow-400 text-xs flex-shrink-0">
+            <FaStar />
+            <span className="font-bold text-gray-900 dark:text-white">
+              {product.rating || 4.8}
+            </span>
+          </div>
+        </div>
+
+        {/* Title Container: Fixed height for 2 lines ensures alignment */}
+        <div className="h-12 mb-2">
+          <h3
+            className="text-lg font-black leading-tight text-gray-900 dark:text-white line-clamp-2 group-hover:text-theme-primary transition-colors"
+            title={product.name}
+          >
+            {product.name}
           </h3>
         </div>
 
-        <div className="mt-3 pt-3 border-t border-gray-50 dark:border-gray-700/50 flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-[10px] text-gray-400 line-through">
-              ₹{(product.price * 1.2).toFixed(0)}
-            </span>
-            <span className="text-base font-black text-gray-900 dark:text-white">
-              ₹{product.price.toFixed(0)}
-            </span>
-          </div>
-
-          {/* Bottom Right: View Button (Text) */}
-          <Link
-            to={`/product/${product.id}`}
-            className="text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-theme-primary flex items-center gap-1 transition-colors px-2 py-1 rounded-md hover:bg-gray-50 dark:hover:bg-white/5"
-          >
-            <FaEye size={12} />
-            View
-          </Link>
+        {/* Price Section: Pushed to bottom with mt-auto */}
+        <div className="flex items-baseline gap-2 mt-auto">
+          <span className="text-xl font-bold text-gray-900 dark:text-white">
+            ₹{product.price.toFixed(0)}
+          </span>
+          <span className="text-xs text-gray-400 line-through decoration-red-500/50">
+            ₹{(product.price * 1.2).toFixed(0)}
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
