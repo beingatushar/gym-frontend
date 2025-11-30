@@ -20,59 +20,6 @@ const MilestoneRewards: React.FC<MilestoneRewardsProps> = ({
   // Sort milestones by amount to ensure correct order
   const sortedMilestones = [...milestones].sort((a, b) => a.amount - b.amount);
 
-  // --- Visual Progress Logic ---
-  // We treat the distance between each milestone as equal "visual segments"
-  // regardless of the actual price difference. This ensures the dots are always spaced evenly.
-  const calculateVisualProgress = () => {
-    if (sortedMilestones.length === 0) return 0;
-
-    // If we've passed the last milestone
-    if (currentAmount >= sortedMilestones[sortedMilestones.length - 1].amount) {
-      return 100;
-    }
-
-    // Find which "segment" we are in
-    let activeIndex = -1;
-    for (let i = 0; i < sortedMilestones.length; i++) {
-      if (currentAmount >= sortedMilestones[i].amount) {
-        activeIndex = i;
-      } else {
-        break;
-      }
-    }
-
-    // Calculate progress within the current segment
-    const segmentWidth = 100 / sortedMilestones.length;
-    const previousAmount =
-      activeIndex === -1 ? 0 : sortedMilestones[activeIndex].amount;
-    const nextAmount = sortedMilestones[activeIndex + 1].amount;
-    const segmentProgress =
-      (currentAmount - previousAmount) / (nextAmount - previousAmount);
-
-    // Base progress (completed segments) + partial progress of current segment
-    // We assume the first segment starts at 0% width and the last ends at 100% width?
-    // Actually, for a timeline looking bar:
-    // Let's map 0 to Start, and 100 to Last Milestone.
-    // If there are 3 milestones, they are at 33%, 66%, 100%.
-
-    const percentPerStep = 100 / sortedMilestones.length;
-    const basePercent = (activeIndex + 1) * percentPerStep;
-
-    // If we are effectively at "step -1" (before first milestone)
-    if (activeIndex === -1) {
-      return segmentProgress * percentPerStep;
-    }
-
-    // Add the partial of the next step
-    // (activeIndex + 1) is the next target index
-    return (activeIndex + 1 + segmentProgress) * percentPerStep;
-  };
-
-  // Refined Logic:
-  // To align with visual nodes placed via Flexbox (justify-between), we need simpler logic or absolute nodes.
-  // Let's use a grid/flex layout where each milestone takes up equal space.
-  // Actually, the easiest way to make the line match the dots perfecty is to render the line *segments* individually between dots.
-
   return (
     <div className="w-full bg-white dark:bg-brand-dark-secondary p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 mb-8 overflow-hidden relative">
       {/* Header Info */}
@@ -103,36 +50,59 @@ const MilestoneRewards: React.FC<MilestoneRewardsProps> = ({
       </div>
 
       {/* The Tracker */}
-      <div className="relative px-4 sm:px-8">
-        {/* Container for Lines and Dots */}
-        <div className="flex items-center justify-between relative z-0">
-          {/* The background grey line connecting everything */}
-          <div className="absolute top-1/2 left-0 w-full h-1.5 bg-gray-100 dark:bg-gray-700 -translate-y-1/2 rounded-full -z-10" />
+      <div className="relative px-0 sm:px-8">
+        {/* --- MOBILE VIEW (Vertical Timeline) --- */}
+        <div className="sm:hidden relative pl-2">
+          {/* Vertical Line Background */}
+          <div className="absolute left-[calc(0.5rem+1.25rem-1px)] top-4 bottom-4 w-0.5 bg-gray-100 dark:bg-gray-800 -z-10" />
 
-          {/* Render Milestones */}
-          {sortedMilestones.map((milestone, index) => {
-            const isUnlocked = currentAmount >= milestone.amount;
-            const isNext =
-              !isUnlocked &&
-              (index === 0 ||
-                currentAmount >= sortedMilestones[index - 1].amount);
-
-            return (
-              <div
-                key={index}
-                className="flex flex-col items-center group relative"
-                style={{ width: '100%' }}
-              >
-                {/* Progress Line Segment (To the left of this dot) */}
-                {/* We render a line segment connecting to the Previous dot (or start) */}
-                {/* Actually, styling a continuous bar is easier. Let's use the absolute bar approach but fixed logic. */}
-              </div>
-            );
-          })}
+          <div className="flex flex-col gap-8">
+            {sortedMilestones.map((milestone, index) => {
+              const isUnlocked = currentAmount >= milestone.amount;
+              return (
+                <div key={index} className="flex items-center gap-4">
+                  {/* Icon */}
+                  <div
+                    className={clsx(
+                      'w-10 h-10 rounded-full flex items-center justify-center border-[3px] transition-all duration-300 z-10 bg-white dark:bg-brand-dark-secondary flex-shrink-0',
+                      isUnlocked
+                        ? 'border-green-500 text-green-500 shadow-md scale-110'
+                        : 'border-gray-200 dark:border-gray-700 text-gray-300'
+                    )}
+                  >
+                    {isUnlocked ? <FaCheck size={14} /> : <FaGift size={14} />}
+                  </div>
+                  {/* Text */}
+                  <div className="flex flex-col">
+                    <span
+                      className={clsx(
+                        'text-xs font-bold mb-0.5 transition-colors duration-300',
+                        isUnlocked
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-gray-400'
+                      )}
+                    >
+                      ₹{milestone.amount}
+                    </span>
+                    <span
+                      className={clsx(
+                        'text-sm font-bold uppercase tracking-wider transition-colors duration-300',
+                        isUnlocked
+                          ? 'text-gray-900 dark:text-white'
+                          : 'text-gray-500'
+                      )}
+                    >
+                      {milestone.label}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Simplified Implementation: Absolute Bar + Flex Dots */}
-        <div className="relative">
+        {/* --- DESKTOP VIEW (Horizontal Bar) --- */}
+        <div className="hidden sm:block relative">
           {/* Grey Track */}
           <div className="absolute top-[15px] left-0 w-full h-2 bg-gray-100 dark:bg-gray-800 rounded-full" />
 
@@ -146,16 +116,8 @@ const MilestoneRewards: React.FC<MilestoneRewardsProps> = ({
 
           {/* Nodes Container */}
           <div className="flex justify-between w-full relative">
-            {/* Fake Start Node (Hidden but used for spacing alignment if needed, usually standard start is 0) */}
-            {/* <div className="w-0" />  */}
-
             {sortedMilestones.map((milestone, index) => {
-              // Visual calculations
               const isUnlocked = currentAmount >= milestone.amount;
-
-              // To make the dots align with a percentage-based bar, we need to position them at specific percentages.
-              // Flexbox `justify-between` pushes them to edges.
-              // A pure percentage left position is more accurate for the bar.
               const positionPercent =
                 (milestone.amount /
                   sortedMilestones[sortedMilestones.length - 1].amount) *

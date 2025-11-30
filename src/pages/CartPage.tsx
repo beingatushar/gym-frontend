@@ -1,19 +1,47 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { FaFire, FaTrash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { useAddressForm } from '../stores/useAddressForm';
 import useCartStore from '../stores/useCartStore';
-import { FaTrash } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { useProductStore } from '../stores/useProductStore';
 
-import { generateCheckoutMessage } from '../utils/utils';
 import AddressForm from '../components/AddressForm';
-import CartItem from '../components/CartItem';
-import EmptyCart from '../components/EmptyCart';
 import MilestoneRewards, {
   Milestone,
 } from '../components/cart/MilestoneRewards.tsx';
 import OrderSummary from '../components/cart/OrderSummary';
-import PageMeta from '../components/common/PageMeta'; // Import PageMeta
+import CartItem from '../components/CartItem';
+import PageMeta from '../components/common/PageMeta';
+import EmptyCart from '../components/EmptyCart';
+import { ProductCard } from '../components/ProductCard';
+import { Product } from '../types/product.types';
+import { generateCheckoutMessage } from '../utils/utils';
+
+// Local component for recommendations
+const CartRecommendations: React.FC = () => {
+  const { fetchFeaturedProducts } = useProductStore();
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fetchFeaturedProducts().then((res) => setProducts(res.slice(0, 4)));
+  }, [fetchFeaturedProducts]);
+
+  if (products.length === 0) return null;
+
+  return (
+    <div className="mt-16 border-t border-gray-200 dark:border-gray-800 pt-10">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+        <FaFire className="text-orange-500" /> You Might Also Like
+      </h3>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const CartPage: React.FC = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCartStore();
@@ -91,7 +119,6 @@ const CartPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-brand-dark pt-24 pb-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      {/* DYNAMIC TITLE */}
       <PageMeta title="Your Cart" />
 
       <div className="max-w-7xl mx-auto">
@@ -119,8 +146,9 @@ const CartPage: React.FC = () => {
               currentAmount={subtotal}
               milestones={CART_MILESTONES}
             />
+
             <div className="bg-white dark:bg-brand-dark-secondary rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-              <div className="p-6 space-y-6">
+              <div className="p-6 space-y-2">
                 {cart.map((item, index) => (
                   <div
                     key={item.id}
@@ -165,6 +193,9 @@ const CartPage: React.FC = () => {
                 pincodeError={pincodeError}
               />
             </div>
+
+            {/* Recommendations Section */}
+            <CartRecommendations />
           </div>
 
           <div className="lg:col-span-5 relative">
