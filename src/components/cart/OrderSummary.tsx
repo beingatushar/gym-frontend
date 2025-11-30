@@ -1,6 +1,7 @@
 import confetti from 'canvas-confetti';
-import React from 'react';
-import { FaArrowRight, FaShieldAlt } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { FaArrowRight, FaShieldAlt, FaTag } from 'react-icons/fa';
 
 interface OrderSummaryProps {
   subtotal: number;
@@ -19,6 +20,20 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   onCheckout,
   disabled,
 }) => {
+  const [promoCode, setPromoCode] = useState('');
+  const [isApplied, setIsApplied] = useState(false);
+
+  // Mock Promo Logic
+  const handleApplyPromo = () => {
+    if (!promoCode.trim()) return;
+    if (promoCode.toUpperCase() === 'SHELLY10') {
+      setIsApplied(true);
+      toast.success('Promo code applied! (Mock)');
+    } else {
+      toast.error('Invalid promo code');
+    }
+  };
+
   const handleCheckoutClick = () => {
     if (disabled) return;
 
@@ -50,6 +65,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     onCheckout();
   };
 
+  // Calculate Savings (Free Shipping + Mock Promo)
+  const savings =
+    (shippingCost === 0 ? 50 : 0) + (isApplied ? subtotal * 0.1 : 0);
+
   return (
     <div className="sticky top-24 transition-all duration-300">
       {/* Glass Card */}
@@ -58,8 +77,37 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           Order Summary
         </h2>
 
+        {/* Promo Code Input */}
+        <div className="mb-6">
+          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+            Promo Code
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+              placeholder="Enter code (Try SHELLY10)"
+              className="flex-1 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary dark:text-white"
+              disabled={isApplied}
+            />
+            <button
+              onClick={handleApplyPromo}
+              disabled={isApplied || !promoCode}
+              className="bg-gray-900 dark:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-800 disabled:opacity-50 transition-colors"
+            >
+              {isApplied ? 'Applied' : 'Apply'}
+            </button>
+          </div>
+          {isApplied && (
+            <p className="text-green-500 text-xs mt-2 font-medium flex items-center gap-1">
+              <FaTag /> 10% Discount Applied!
+            </p>
+          )}
+        </div>
+
         {/* Calculations */}
-        <div className="space-y-3 mb-8">
+        <div className="space-y-3 mb-6">
           <div className="flex justify-between text-gray-600 dark:text-gray-300">
             <span>Subtotal</span>
             <span className="font-medium">₹{subtotal.toFixed(2)}</span>
@@ -79,16 +127,33 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
             <span className="font-medium">₹{tax.toFixed(2)}</span>
           </div>
 
+          {isApplied && (
+            <div className="flex justify-between text-green-500 font-medium">
+              <span>Discount</span>
+              <span>-₹{(subtotal * 0.1).toFixed(2)}</span>
+            </div>
+          )}
+
           <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent my-4" />
 
+          {/* Total */}
           <div className="flex justify-between items-end">
             <span className="text-lg font-bold text-gray-800 dark:text-gray-200">
               Total
             </span>
             <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-theme-primary to-orange-600">
-              ₹{total.toFixed(2)}
+              ₹{(total - (isApplied ? subtotal * 0.1 : 0)).toFixed(2)}
             </span>
           </div>
+
+          {/* Savings Callout */}
+          {savings > 0 && (
+            <div className="mt-2 text-right">
+              <span className="inline-block bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-bold px-2 py-1 rounded-md">
+                You saved ₹{savings.toFixed(0)} on this order!
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Trust Badges */}
