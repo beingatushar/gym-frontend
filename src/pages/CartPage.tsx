@@ -1,15 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { FaTrash, FaCreditCard } from 'react-icons/fa';
-
 import { useAddressForm } from '../stores/useAddressForm';
 import useCartStore from '../stores/useCartStore';
+import { FaTrash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 import { generateCheckoutMessage } from '../utils/utils';
 import AddressForm from '../components/AddressForm';
 import CartItem from '../components/CartItem';
 import EmptyCart from '../components/EmptyCart';
+import MilestoneRewards, {
+  Milestone,
+} from '../components/cart/MilestoneRewards.tsx';
+import OrderSummary from '../components/cart/OrderSummary';
+import PageMeta from '../components/common/PageMeta'; // Import PageMeta
 
 const CartPage: React.FC = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCartStore();
@@ -22,21 +26,38 @@ const CartPage: React.FC = () => {
     pincodeError,
   } = useAddressForm();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const subtotal = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  // Example shipping cost and tax rate
+
+  const CART_MILESTONES: Milestone[] = [
+    { amount: 4999, label: 'Free Wristband' },
+    { amount: 7999, label: 'Shelly T-Shirt' },
+    { amount: 9999, label: 'Pro Gym Bag' },
+  ];
+
   const shippingCost = subtotal > 500 ? 0 : 50;
   const taxRate = 0.05;
-  const taxes = subtotal * taxRate;
-  const totalPrice = subtotal + shippingCost + taxes;
+  const tax = subtotal * taxRate;
+  const totalPrice = subtotal + shippingCost + tax;
 
   const handleCheckout = () => {
     if (!validate()) {
       toast.error('Please fill in all required address details correctly.');
+      document
+        .getElementById('address-form-section')
+        ?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
+
+    const unlockedRewards = CART_MILESTONES.filter(
+      (m) => subtotal >= m.amount
+    ).map((m) => m.label);
 
     const address = {
       name: formState.name.trim(),
@@ -47,7 +68,13 @@ const CartPage: React.FC = () => {
       phone: formState.mobile.trim(),
     };
 
-    const message = generateCheckoutMessage(cart, address);
+    let message = generateCheckoutMessage(cart, address);
+
+    if (unlockedRewards.length > 0) {
+      message += `\n🎁 *UNLOCKED REWARDS:*\n`;
+      unlockedRewards.forEach((r) => (message += `✅ ${r}\n`));
+    }
+
     const encodedMessage = encodeURIComponent(message);
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const whatsappUrl = isMobile
@@ -63,77 +90,92 @@ const CartPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-24">
-      <h1 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100 mb-8 tracking-tight">
-        Your Shopping Cart
-      </h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        {/* Cart Items & Summary */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white dark:bg-brand-dark-secondary rounded-xl shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
-              Order Summary
-            </h2>
-            <div className="space-y-4">
-              {cart.map((item) => (
-                <CartItem
-                  key={item.id}
-                  item={item}
-                  onRemove={removeFromCart}
-                  onUpdateQuantity={updateQuantity}
-                />
-              ))}
-            </div>
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={clearCart}
-                className="flex items-center gap-2 text-sm text-red-500 hover:text-red-700 font-medium transition"
-              >
-                <FaTrash /> Clear Cart
-              </button>
-            </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-brand-dark pt-24 pb-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+      {/* DYNAMIC TITLE */}
+      <PageMeta title="Your Cart" />
+
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 border-b border-gray-200 dark:border-gray-800 pb-6">
+          <div>
+            <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-2">
+              Your Cart
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400">
+              You have {cart.length} item{cart.length !== 1 ? 's' : ''} in your
+              cart
+            </p>
           </div>
-          {/* Order Totals */}
-          <div className="bg-white dark:bg-brand-dark-secondary rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-              Order Totals
-            </h3>
-            <div className="space-y-2 text-gray-600 dark:text-gray-300">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>₹{subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>₹{shippingCost.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tax (5%)</span>
-                <span>₹{taxes.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between font-bold text-gray-900 dark:text-gray-100 text-lg border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
-                <span>Total</span>
-                <span>₹{totalPrice.toFixed(2)}</span>
-              </div>
-            </div>
-          </div>
+          <Link
+            to="/shop"
+            className="text-theme-primary hover:text-theme-primary/80 font-semibold mt-4 sm:mt-0 transition-colors"
+          >
+            Continue Shopping &rarr;
+          </Link>
         </div>
 
-        {/* Address Form */}
-        <div className="lg:col-span-1">
-          <AddressForm
-            formState={formState}
-            updateField={updateField}
-            errors={errors}
-            isFetchingPincode={isFetchingPincode}
-            pincodeError={pincodeError}
-          />
-          <button
-            onClick={handleCheckout}
-            className="w-full mt-6 flex justify-center items-center gap-3 bg-theme-primary text-white px-6 py-3 rounded-lg hover:opacity-90 transition duration-300 font-semibold shadow-md"
-          >
-            <FaCreditCard /> Proceed to Checkout
-          </button>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="lg:col-span-7 space-y-8">
+            <MilestoneRewards
+              currentAmount={subtotal}
+              milestones={CART_MILESTONES}
+            />
+            <div className="bg-white dark:bg-brand-dark-secondary rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+              <div className="p-6 space-y-6">
+                {cart.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className="animate-fade-in-up"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <CartItem
+                      item={item}
+                      onRemove={removeFromCart}
+                      onUpdateQuantity={updateQuantity}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="bg-gray-50 dark:bg-white/5 px-6 py-4 flex justify-end border-t border-gray-100 dark:border-gray-800">
+                <button
+                  onClick={clearCart}
+                  className="text-sm text-red-500 hover:text-red-700 font-medium flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                >
+                  <FaTrash size={14} /> Clear Entire Cart
+                </button>
+              </div>
+            </div>
+
+            <div
+              id="address-form-section"
+              className="bg-white dark:bg-brand-dark-secondary rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 sm:p-8"
+            >
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                  Shipping Details
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Where should we send your supplements?
+                </p>
+              </div>
+              <AddressForm
+                formState={formState}
+                updateField={updateField}
+                errors={errors}
+                isFetchingPincode={isFetchingPincode}
+                pincodeError={pincodeError}
+              />
+            </div>
+          </div>
+
+          <div className="lg:col-span-5 relative">
+            <OrderSummary
+              subtotal={subtotal}
+              shippingCost={shippingCost}
+              tax={tax}
+              total={totalPrice}
+              onCheckout={handleCheckout}
+            />
+          </div>
         </div>
       </div>
     </div>
