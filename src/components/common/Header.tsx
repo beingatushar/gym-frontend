@@ -34,8 +34,7 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className="fixed w-full z-50 top-0 left-0 transition-all duration-300">
-      {/* The logic is now encapsulated here */}
+    <header className="sticky top-0 w-full z-50 transition-all duration-300">
       <AnnouncementBanner />
 
       {/* Compact Main Navbar */}
